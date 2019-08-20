@@ -1,34 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Senai.Sstop.WebApi.Domains;
+﻿using Senai.Sstop.WebApi.Domains;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Senai.Sstop.WebApi.Repository
+namespace Senai.Sstop.WebApi.Repositories
 {
     public class EstiloRepository
     {
-        private string StringConexao = "Data Source.\\SqlExpress;Initial Catalog=T_SStop;User Id=sa;Pwd=132";
+
+        // aonde que será feita essa comunicação
+        // private string StringConexao = "Data Source=.\\SqlExpress;Initial Catalog=T_SStop;User Id=sa;Pwd=132;";
+        private string StringConexao = "Data Source=localhost;Initial Catalog=T_SStop;Integrated Security=true;";
+
         public List<EstiloDomain> Listar()
         {
             List<EstiloDomain> estilos = new List<EstiloDomain>();
 
-            //chamar o banco
+            // chamar o banco - declaro passando a string de conexão
             using (SqlConnection con = new SqlConnection(StringConexao))
             {
-                //nossa query a ser selecionada
-                string Query = "SELECT IdEstiloMusical,Nome FROM EstilosMusicais";
-                //Abrir a conexao
+                // nossa query a ser executada
+                string Query = "SELECT IdEstiloMusical, Nome FROM EstilosMusicais";
+                // abrir a conexao
                 con.Open();
 
-                //Declaro para percorrer a lista
+                // declaro para percorrer a lista
                 SqlDataReader sdr;
-
+                // comando a ser executado em qual conexao
                 using (SqlCommand cmd = new SqlCommand(Query, con))
                 {
-                    //pegar os valores da tabela do banco de dados e armazenar dentro da aplicação backend
+                    // pegar os valores da tabela do banco e armazenar dentro da aplicacao do backend
                     sdr = cmd.ExecuteReader();
 
                     while (sdr.Read())
@@ -43,65 +46,72 @@ namespace Senai.Sstop.WebApi.Repository
                 }
 
             }
-                //fazer o select
-                //retornar as informaçoes
+            // executar o select
+            // retornar as informacoes
 
-                return estilos;
+            return estilos;
         }
-        
-            List<EstiloDomain> estilos = new List<EstiloDomain>
+
+        // criar um método para que eu acesse o banco de dados e busque o estilo musical aonde o id seja igual ao que eu quero pq eu mando
+        public EstiloDomain BuscarPorId(int id)
         {
-            new EstiloDomain { IdEstilo = 1, Nome = "Rock" },
-            new EstiloDomain { IdEstilo = 2, Nome = "Pop" },
-            new EstiloDomain { IdEstilo = 3, Nome = "Folk" }
-        };
-
-        EstiloRepository estiloRepository = new EstiloRepository(); 
-
-            [HttpGet]
-            public IEnumerable<EstiloDomain> ListarTodos()
+            string Query = "SELECT IdEstiloMusical, Nome FROM EstilosMusicais WHERE IdEstiloMusical = @IdEstiloMusical";
+            // abrir a conexao
+            using (SqlConnection con = new SqlConnection(StringConexao))
             {
-            return estiloRepository.Listar();
-            }
+                con.Open();
+                SqlDataReader sdr;
 
-            [HttpGet("{id}")]
-            public IActionResult BuscarPorId(int id)
-            {
-                EstiloDomain Estilo = estilos.Find(x => x.IdEstilo == id);
-                if (Estilo == null)
+                using (SqlCommand cmd = new SqlCommand(Query, con))
                 {
-                    return NotFound();
-                }
-                return Ok(Estilo);
-            }
+                    cmd.Parameters.AddWithValue("@IdEstiloMusical", id);
+                    sdr = cmd.ExecuteReader();
 
-        private IActionResult Ok(EstiloDomain estilo)
-        {
-            throw new NotImplementedException();
-        }
-
-        private IActionResult NotFound()
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpPost]
-            public IActionResult Cadastrar(EstiloDomain estiloDomain)
-            {
-                estilos.Add(
-                    new EstiloDomain
+                    if (sdr.HasRows)
                     {
-                        IdEstilo = estilos.Count + 1,
-                        Nome = estiloDomain.Nome
+                        // ler o que tem no sdr
+                        while (sdr.Read())
+                        {
+                            EstiloDomain estilo = new EstiloDomain
+                            {
+                                IdEstilo = Convert.ToInt32(sdr["IdEstiloMusical"]),
+                                Nome = sdr["Nome"].ToString()
+                            };
+                            return estilo;
+                        }
                     }
-                );
-                return Ok(estilos);
+                    return null;
+
+                    // retornar
+                }
             }
 
-        private IActionResult Ok(List<EstiloDomain> estilos)
+        }
+
+        public void Cadastrar(EstiloDomain estiloDomain)
         {
-            throw new NotImplementedException();
+            string Query = "INSERT INTO EstilosMusicais (Nome) VALUES (@Nome)";
+
+            using (SqlConnection con = new SqlConnection(StringConexao))
+            {
+                SqlCommand cmd = new SqlCommand(Query, con);
+                cmd.Parameters.AddWithValue("@Nome", estiloDomain.Nome);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public void Deletar (int id)
+        {
+            string Query = "DELETE FROM EstilosMusicais WHERE IdEstiloMusical = @Id";
+            using (SqlConnection con = new SqlConnection(StringConexao))
+            {
+                using(SqlCommand cmd = new SqlCommand(Query, con))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
-    }
-
+}
