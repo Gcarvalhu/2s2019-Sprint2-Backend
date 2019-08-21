@@ -12,6 +12,6 @@ namespace Senai.Filmes.WebApi.Controllers
     [ApiController]
     public class GenerosController : ControllerBase
     {
-        List
+        
     }
 }
