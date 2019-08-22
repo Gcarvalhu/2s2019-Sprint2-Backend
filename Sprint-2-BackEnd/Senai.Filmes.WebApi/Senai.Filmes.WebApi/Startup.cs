@@ -7,13 +7,26 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Senai.Sstop.WebApi
+namespace Senai.Filmes.WebApi
 {
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
+
+            services.AddSwaggerGen(c =>
+                   c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                   {
+                       Title = "Filmes API",
+                       Version = "v1"
+                   })
+            );
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -22,6 +35,14 @@ namespace Senai.Sstop.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors("CorsPolicy");
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Filmes API V1");
+            });
 
             app.UseMvc();
         }

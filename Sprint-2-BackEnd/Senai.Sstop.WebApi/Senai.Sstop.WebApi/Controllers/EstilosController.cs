@@ -31,7 +31,7 @@ namespace Senai.Sstop.WebApi.Controllers
             EstiloDomain estiloDomain = EstiloRepository.BuscarPorId(id);
             if (estiloDomain == null)
                 return NotFound();
-            return Ok(estiloDomain);
+            return estiloDomain;
         }
         [HttpDelete("{id}")]
         public IActionResult Deletar (int id)
