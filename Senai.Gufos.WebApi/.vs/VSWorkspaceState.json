@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Senai.Gufos.WebApi"
+    "\\Senai.Gufos.WebApi",
+    "\\Senai.Gufos.WebApi\\Repositories"
   ],
   "SelectedNode": "\\Senai.Gufos.WebApi.sln",
   "PreviewInSolutionExplorer": false

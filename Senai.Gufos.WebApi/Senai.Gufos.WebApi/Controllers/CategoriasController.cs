@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Senai.Gufos.WebApi.Domains;
@@ -28,6 +29,7 @@ namespace Senai.Gufos.WebApi.Controllers
         /// </summary>
         /// <param name="categoria">Categoria</param>
         /// <returns>Mensagem de sucesso.</returns>
+        [Authorize]
         [HttpPost]
         public IActionResult Cadastrar(Categorias categoria)
         {
@@ -41,7 +43,7 @@ namespace Senai.Gufos.WebApi.Controllers
                 return BadRequest(new { mensagem = "Eita, erro: " + ex.Message });
             }
         }
-
+        [Authorize(Roles = "ADMINISTRADOR")]
         [HttpGet("{id}")]
         public IActionResult BuscarPorId(int id)
         {
