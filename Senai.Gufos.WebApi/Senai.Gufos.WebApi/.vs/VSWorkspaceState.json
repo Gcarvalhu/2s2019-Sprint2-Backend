@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Controllers",
+    "\\Domains",
+    "\\Repositories",
+    "\\ViewModels"
   ],
-  "SelectedNode": "\\Startup.cs",
+  "SelectedNode": "\\ViewModels\\LoginViewModel.cs",
   "PreviewInSolutionExplorer": false
 }
