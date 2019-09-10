@@ -25,7 +25,7 @@ namespace Senai.OpFlix.WebApi.Repositories
         {
             using (opflixContext ctx = new opflixContext())
             {
-                Usuarios usuario = ctx.Usuarios.Include(x => x.Permissao).FirstOrDefault(x => x.Email == login.Email && x.Senha == login.Senha);
+                Usuarios usuario = ctx.Usuarios.FirstOrDefault(x => x.Email == login.Email && x.Senha == login.Senha);
                 if (usuario == null)
                     return null;
                 return usuario;
