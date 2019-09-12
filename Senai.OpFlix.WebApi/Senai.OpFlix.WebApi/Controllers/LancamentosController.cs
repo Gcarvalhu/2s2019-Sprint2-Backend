@@ -12,6 +12,7 @@ using Senai.OpFlix.WebApi.Repositories;
 namespace Senai.OpFlix.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class LancamentosController : ControllerBase
     {
@@ -28,12 +29,11 @@ namespace Senai.OpFlix.WebApi.Controllers
             return Ok(LancamentosRepository.Listar());
         }
         [Authorize(Roles = "ADMINISTRADOR")]
-        [HttpPost]
+        [HttpPut]
         public IActionResult Atualizar(Lancamentos lancamento)
         {
             try
             {
-
                 Lancamentos LancamentoBuscado = LancamentosRepository.BuscarPorId(lancamento.IdLanc);
 
                 if (LancamentoBuscado == null)
@@ -44,11 +44,11 @@ namespace Senai.OpFlix.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensagem = "ERRO" });
+                return BadRequest(new { mensagem = "ERRO" +ex.Message});
             }
         }
         [Authorize(Roles = "ADMINISTRADOR")]
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult BuscarPorId(int id)
         {
             try
@@ -67,8 +67,21 @@ namespace Senai.OpFlix.WebApi.Controllers
         [HttpPost]
         public IActionResult Cadastrar(Lancamentos lancamento)
         {
-            LancamentosRepository.Cadastrar(lancamento);
-            return Ok();
+            try
+            {
+                if (lancamento == null)
+                {
+                    return BadRequest(new { mensagem = "Não cadastrado, algum dado nulo ;-;" });
+                }
+                LancamentosRepository.Cadastrar(lancamento);
+
+                return Ok();
+
+            }
+            catch (Exception exe)
+            {
+                return BadRequest(new { mensagem = "Erro eminente ao cadastrar, veja mais meu caro >:" + exe.Message });
+            }                   
         }
         [Authorize(Roles = "ADMINISTRADOR")]
         [HttpDelete("{id}")]

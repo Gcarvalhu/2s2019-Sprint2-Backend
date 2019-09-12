@@ -12,6 +12,7 @@ using Senai.OpFlix.WebApi.Repositories;
 namespace Senai.OpFlix.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class UsuarioController : ControllerBase
     {
@@ -28,7 +29,7 @@ namespace Senai.OpFlix.WebApi.Controllers
             return Ok(UsuarioRepository.Listar());
         }
         [Authorize(Roles = "ADMINISTRADOR")]
-        [HttpPost]
+        [HttpPut]
         public IActionResult Atualizar(Usuarios usuario)
         {
             try
@@ -48,7 +49,7 @@ namespace Senai.OpFlix.WebApi.Controllers
             }
         }
         [Authorize(Roles = "ADMINISTRADOR")]
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult BuscarPorId (int id)
         {
             try
@@ -78,4 +79,4 @@ namespace Senai.OpFlix.WebApi.Controllers
             return Ok();
         } 
     }
-}
+}   

@@ -19,6 +19,7 @@ namespace Senai.OpFlix.WebApi.Domains
         public virtual DbSet<Lancamentos> Lancamentos { get; set; }
         public virtual DbSet<Plataforma> Plataforma { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
+        public virtual DbSet<UsuariosLancamentos> UsuariosLancamentos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -112,6 +113,23 @@ namespace Senai.OpFlix.WebApi.Domains
                     .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<UsuariosLancamentos>(entity =>
+            {
+                entity.HasKey(e => e.IdPrincipal);
+
+                entity.Property(e => e.IdPrincipal).ValueGeneratedNever();
+
+                entity.HasOne(d => d.IdLancNavigation)
+                    .WithMany(p => p.UsuariosLancamentos)
+                    .HasForeignKey(d => d.IdLanc)
+                    .HasConstraintName("FK__UsuariosL__IdLan__2A164134");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.UsuariosLancamentos)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("FK__UsuariosL__IdUsu__29221CFB");
             });
         }
     }

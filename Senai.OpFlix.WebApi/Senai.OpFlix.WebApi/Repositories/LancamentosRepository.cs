@@ -11,12 +11,24 @@ namespace Senai.OpFlix.WebApi.Repositories
     {
         public void Atualizar(Lancamentos lancamento)
         {
-            throw new NotImplementedException();
+            using(opflixContext ctx = new opflixContext())
+            {
+                Lancamentos LancamentoBuscado = ctx.Lancamentos.FirstOrDefault(x => x.IdLanc == lancamento.IdLanc);
+                // update categorias set nome = @nome
+                LancamentoBuscado.Titulo = lancamento.Titulo;
+                // insert - add, delete - remove, update - update
+                ctx.Lancamentos.Update(LancamentoBuscado);
+                // efetivar
+                ctx.SaveChanges();
+            }
         }
 
         public Lancamentos BuscarPorId(int id)
         {
-            throw new NotImplementedException();
+            using(opflixContext ctx = new opflixContext())
+            {
+                return ctx.Lancamentos.FirstOrDefault(x => x.IdLanc == id);
+            }
         }
 
         public void Cadastrar(Lancamentos lancamento)
