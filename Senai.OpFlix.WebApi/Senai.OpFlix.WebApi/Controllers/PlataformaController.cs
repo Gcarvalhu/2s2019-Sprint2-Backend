@@ -44,5 +44,21 @@ namespace Senai.OpFlix.WebApi.Controllers
             PlataformaRepository.Atualizar(plataforma);
             return Ok();
         }
+        [Authorize]
+        [HttpGet("Filtro/{plataforma}")]
+        public IActionResult BuscarPorNomePlataforma(string plataforma)
+        {
+            try
+            {
+                Plataforma varplataforma = PlataformaRepository.BuscarPorPlataforma(plataforma);
+                if (varplataforma == null)
+                    return NotFound();
+                return Ok(plataforma);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
     }
 }

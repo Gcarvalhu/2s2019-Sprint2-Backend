@@ -90,5 +90,21 @@ namespace Senai.OpFlix.WebApi.Controllers
             LancamentosRepository.Deletar(id);
             return Ok();
         }
+        [Authorize]
+        [HttpGet("Filtro/{DataLanc}")]
+        public IActionResult BuscarPorData(DateTime DataLanc)
+        {
+            try
+            {
+                Lancamentos lancamento = LancamentosRepository.BuscarPorData(DataLanc);
+                if (lancamento == null)
+                    return NotFound();
+                return Ok(DataLanc);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
     }
 }

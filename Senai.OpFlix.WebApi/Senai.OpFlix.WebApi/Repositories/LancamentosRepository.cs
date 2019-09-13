@@ -23,6 +23,14 @@ namespace Senai.OpFlix.WebApi.Repositories
             }
         }
 
+        public Lancamentos BuscarPorData(DateTime DataLancamento)
+        {
+            using(opflixContext ctx = new opflixContext())
+            {
+                return ctx.Lancamentos.FirstOrDefault(x => x.DataLanc == DataLancamento);
+            }
+        }
+
         public Lancamentos BuscarPorId(int id)
         {
             using(opflixContext ctx = new opflixContext())

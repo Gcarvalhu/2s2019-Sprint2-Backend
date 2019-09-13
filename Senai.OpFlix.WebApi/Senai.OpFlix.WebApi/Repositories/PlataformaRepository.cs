@@ -28,6 +28,14 @@ namespace Senai.OpFlix.WebApi.Repositories
             }
         }
 
+        public Plataforma BuscarPorPlataforma(string plataforma)
+        {
+            using (opflixContext ctx = new opflixContext())
+            {
+                return ctx.Plataforma.FirstOrDefault(x => x.NomePlataforma == plataforma);
+            }
+        }
+
         public void Cadastrar(Plataforma plataforma)
         {
             using(opflixContext ctx = new opflixContext())
