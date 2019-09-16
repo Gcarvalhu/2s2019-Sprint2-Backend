@@ -34,7 +34,6 @@ namespace Senai.OpFlix.WebApi.Controllers
                 Usuarios usuarioBuscado = UsuarioRepository.BuscarPorEmailSenha(login);
                 if (usuarioBuscado == null)
                 {
-
                     return NotFound(new { mensagem = "Errou feio colega" });
                 }
 
